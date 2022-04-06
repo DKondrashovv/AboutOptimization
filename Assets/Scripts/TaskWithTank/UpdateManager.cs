@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 
@@ -11,11 +12,13 @@ public class UpdateManager : MonoBehaviour
     public ITickable[] tickables;
     private static int nextTickables;
 
-    private void Start()
+    private void Awake()
     {
         tickables = new ITickable[100];
         nextTickables = 0;
     }
+
+    
 
     void Update()
     {

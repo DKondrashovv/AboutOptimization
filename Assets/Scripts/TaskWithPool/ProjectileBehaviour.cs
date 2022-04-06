@@ -20,6 +20,6 @@ public class ProjectileBehaviour : MonoBehaviour
 
 	void RemoveProjectile()
 	{
-		Destroy(gameObject);
+		gameObject.SetActive(false);
 	}
 }

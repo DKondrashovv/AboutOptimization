@@ -14,7 +14,7 @@ public class TankAIBenchmark : MonoBehaviour
         {
             tanks[i] = Instantiate(enemyTank);
             tanks[i].transform.position = new Vector3(Random.Range(-50, 50), 0, Random.Range(-50, 50));
-            var tickableForTank = tanks[i].GetComponent<AIEnemyTank>();
+            var tickableForTank = tanks[i].GetComponent<ITickable>();
             _updateManager.AddTank(tickableForTank);
         }
     }

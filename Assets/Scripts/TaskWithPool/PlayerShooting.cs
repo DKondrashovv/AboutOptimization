@@ -1,10 +1,12 @@
-﻿using Unity.Collections;
+﻿using System.Collections.Generic;
+using Unity.Collections;
 using UnityEngine;
 
 public class PlayerShooting : MonoBehaviour
 {
 	public bool spreadShot = false;
-
+	
+	
 	[Header("General")]
 	public Transform gunBarrel;
 	public ParticleSystem shotVFX;
@@ -17,9 +19,17 @@ public class PlayerShooting : MonoBehaviour
 
 	float timer;
 
+	[Header("Pool")] public List<GameObject> bulletPool;
+
 	void Start()
 	{
-
+		bulletPool = new List<GameObject>();
+		for (int i = 0; i < spreadAmount; i++)
+		{
+			var bullet = Instantiate(bulletPrefab);
+			bullet.SetActive(false);
+			bulletPool.Add(bullet);
+		}
 	}
 
 	void Update()
@@ -49,10 +59,14 @@ public class PlayerShooting : MonoBehaviour
 
 	void SpawnBullet(Vector3 rotation)
 	{
-		GameObject bullet = Instantiate(bulletPrefab) as GameObject;
 
-		bullet.transform.position = gunBarrel.position;
-		bullet.transform.rotation = Quaternion.Euler(rotation);
+		var bullet = InsideOfPool();
+		if (bullet != null)
+		{
+			bullet.SetActive(true);
+			bullet.transform.position = gunBarrel.position;
+			bullet.transform.rotation = Quaternion.Euler(rotation);
+		}
 	}
 
 	void SpawnBulletSpread(Vector3 rotation)
@@ -69,13 +83,28 @@ public class PlayerShooting : MonoBehaviour
 			{
 				tempRot.y = (rotation.y + 3 * y) % 360;
 
-				GameObject bullet = Instantiate(bulletPrefab) as GameObject;
-
-				bullet.transform.position = gunBarrel.position;
-				bullet.transform.rotation = Quaternion.Euler(tempRot);
+				var bullet = InsideOfPool();
+				if (bullet != null)
+				{
+					bullet.SetActive(true);
+					bullet.transform.position = gunBarrel.position;
+					bullet.transform.rotation = Quaternion.Euler(tempRot);
+				}
 			}
 		}
 	}
 
+	private GameObject InsideOfPool()
+	{
+		foreach (var bullet in bulletPool)
+		{
+			if (!bullet.activeInHierarchy)
+			{
+				return bullet;
+			}
+		}
+		return null;
+	}
+	
 }
 
